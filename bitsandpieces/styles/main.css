@@ -385,6 +385,17 @@ pre code {
 }
 
 /* Main nav Tree (not implemented...yet */
+.indent1 {
+  margin-left: 0px !important;
+}
+
+.indent2 {
+  padding-left: 20px !important;
+}
+
+.indent3 {
+  padding-left: 30px !important;
+}
 
 .main-nav nav li.directory > a::before {
   content: '▸ ';

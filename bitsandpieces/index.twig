@@ -19,18 +19,26 @@
 
 <aside class="main-nav">
 <nav>
-  <ul>
-    {% for page in pages if page.title %}
-      <li class="menuitem {% if page.id == current_page.id %}active{% endif %}">
-        <a href="{{ page.url }}" data-shortcut="{{page.meta.shortcut}}">
-          {{ page.title }}
-          {% if page.meta.shortcut %}
-            <span class="shortcut">{{page.meta.shortcut|replace({'+':' '})}}</a>
-          {% endif %}
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
+ <ul>
+ {% set cId = current_page.id|trim('index',side='right')|trim('/',side='right') %}
+ {% set cId2 = cId|split('/')[:(current_page.id|split('/')|length-1)]|join('/') %}
+ {% set cId3 = cId|split('/')[:(current_page.id|split('/')|length-2)]|join('/') %}
+ {% for p in pages if p.title %}
+     {% set hId = p.id|trim('index',side='right')|trim('/',side='right') %}
+     {% set hId3 = hId|split('/')[:(current_page.id|split('/')|length-2)]|join('/') %}
+     {% set hIdNext = p.next_page.id|trim('index',side='right')|trim('/',side='right') %}
+     {% if hId|split('/')|length <= cId2|split('/')|length and cId3 starts with hId3 %}
+       <li class="menuitem{% if hIdNext|split('/')|length > hId|split('/')|length %} directory{% else %} page-nav{% endif %} indent{{hId|split('/')|length}}">
+         <a href="{{p.url}}" class="{% if hId == cId2 %}folder-open{% endif %}">{{p.title}}</a>
+       </li>
+     {% endif %}
+     {% if hId starts with cId2 and hId != cId2 and cId2|length > 0 and hId|split('/')|length <= 1+(cId2|split('/')|length) %}
+       <li class="menuitem{% if hIdNext|split('/')|length > hId|split('/')|length %} directory{% else %} page-nav{% endif %} indent{{hId|split('/')|length}}">
+         <a href="{{p.url}}">{{p.title}}</a>
+       </li>
+     {% endif %}
+ {% endfor %}
+ </ul>
 </nav>
 </aside>
 <main class="main-content">
